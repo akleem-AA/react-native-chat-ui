@@ -137,10 +137,20 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
     setMessages((prevMessages) => prevMessages.filter((msg) => msg.id !== item.id));
   };
 
+  // const formatTimestamp = (timestamp) => {
+  //   const options = { hour: 'numeric', minute: '2-digit', hour12: true };
+  //   return new Intl.DateTimeFormat('en-US', options).format(timestamp);
+  // };
   const formatTimestamp = (timestamp) => {
-    const options = { hour: 'numeric', minute: '2-digit', hour12: true };
-    return new Intl.DateTimeFormat('en-US', options).format(timestamp);
+    if (!timestamp) return ''; // Handle empty timestamps
+    
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) return ''; // Handle invalid date
+  
+    const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+    return new Intl.DateTimeFormat('en-US', options).format(date);
   };
+  
 
 
   const renderMessage = ({ item }) => {

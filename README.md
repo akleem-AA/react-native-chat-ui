@@ -9,6 +9,7 @@ A simple chat interface built using React Native, with real-time messaging via S
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Props](#props)
 - [Passing Data](#passing-data)
 - [Folder Structure](#folder-structure)
 - [Publishing Your Own Package](#publishing-your-own-package)
@@ -55,23 +56,32 @@ Before you begin, make sure you have the following installed:
 import React, { useState } from 'react';
 import { ChatUI } from 'react-native-chat-ui';
 
-const messages = [
-  { id: 1, text: 'Hello!', sender: 'user', timestamp: '10:30 AM' },
-  { id: 2, text: 'Hi there!', sender: 'me', timestamp: '10:32 AM' },
+const initialMessages = [
+  { id: '1', text: 'Hello!', fromMe: false, timestamp: Date.now(), image: null },
+  { id: '2', text: 'Hi there!', fromMe: true, timestamp: Date.now(), image: null },
 ];
 
 const ChatScreen = () => {
-  const [chatMessages, setChatMessages] = useState(messages);
+  const [messages, setMessages] = useState(initialMessages);
 
-  const sendMessage = (message) => {
-    setChatMessages([...chatMessages, message]);
+  const onSendMessage = (message) => {
+    setMessages([...messages, message]);
   };
 
-  return <ChatUI messages={chatMessages} onSendMessage={sendMessage} />;
+  return <ChatUI messages={messages} onSendMessage={onSendMessage} profileData={{ name: 'John' }} themes={{ primary: '#6200ea' }} />;
 };
 
 export default ChatScreen;
 ```
+
+## Props
+
+| Prop Name       | Type     | Description |
+|----------------|----------|-------------|
+| `initialMessages` | `Array` | List of initial chat messages |
+| `onSendMessage`  | `Function` | Callback function when a message is sent |
+| `profileData` | `Object` | User profile data (e.g., `{ name: 'John' }`) |
+| `themes` | `Object` | Theme customization (e.g., `{ primary: '#6200ea' }`) |
 
 ## Passing Data
 
@@ -79,16 +89,18 @@ Ensure you pass messages in the following format:
 ```json
 [
   {
-    "id": 1,
+    "id": "1",
     "text": "Hello!",
-    "sender": "user",
-    "timestamp": "10:30 AM"
+    "fromMe": false,
+    "timestamp": 1711025520000,
+    "image": null
   },
   {
-    "id": 2,
+    "id": "2",
     "text": "Hi there!",
-    "sender": "me",
-    "timestamp": "10:32 AM"
+    "fromMe": true,
+    "timestamp": 1711025580000,
+    "image": "https://example.com/sample.jpg"
   }
 ]
 ```

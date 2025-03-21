@@ -1,6 +1,6 @@
 {
   "name": "akleem-react-native-chat",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "A reusable chat UI component for React Native.",
   "main": "index.js",
   "dependencies": {
