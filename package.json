@@ -30,13 +30,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/react-native-chat-ui"
+    "url": "https://github.com/akleem-AA/react-native-chat-ui"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/react-native-chat-ui/issues"
+    "url": "https://github.com/akleem-AA/react-native-chat-ui/issues"
   },
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "https://github.com/yourusername/react-native-chat-ui#readme"
+  "homepage": "https://github.com/akleem-AA/react-native-chat-ui#readme"
 }
