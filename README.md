@@ -1,7 +1,9 @@
 # React Native Chat UI
 
 A simple chat interface built using React Native, with real-time messaging via Socket.IO, image sharing, and more.
-![Chat UI Preview](./Assests/chat-preview.png)
+![Chat UI Preview](https://raw.githubusercontent.com/akleem-AA/react-native-chat-ui/main/src/Assests/chat-preview.png)
+
+
 
 
 ## Table of Contents
