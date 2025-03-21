@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, FlatList, TextInput, TouchableOpacity, Text, Image, Alert } from 'react-native';
+import { View, FlatList, TextInput, TouchableOpacity, Text, Image, Alert, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ActionSheet from 'react-native-actionsheet';
@@ -8,17 +8,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
-const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
+const ChatScreen = ({ messageData, onSendMessage, profileData, themesColor = '' }) => {
   const navigation = useNavigation();
-  const [messages, setMessages] = useState(initialMessages || []);
+  const [messages, setMessages] = useState(messageData || []);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [message, setMessage] = useState('');
   const flatListRef = useRef(null);
   const actionSheetRef = useRef(null);
 
   useEffect(() => {
-    setMessages(initialMessages);
-  }, [initialMessages]);
+    setMessages(messageData);
+  }, [messageData]);
 
   const sendMessage = () => {
     if (!message.trim()) return;
@@ -31,12 +31,11 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
     };
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     setMessage('');
-    onSendMessage(newMessage);  
+    onSendMessage(newMessage);
     flatListRef.current.scrollToEnd({ animated: true });
   };
 
   const pickImage = () => {
-    // actionSheetRef.current.show();
     showBottomSheet();
   };
 
@@ -48,8 +47,10 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
   const handleBottomSheetSelection = (index) => {
     setBottomSheetVisible(false);
     if (index === 0) {
+      // Take Photo
       handleCameraLaunch();
     } else if (index === 1) {
+      // Choose from Gallery
       openImagePicker();
     }
   };
@@ -59,7 +60,7 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
   // };
 
   const handleCameraLaunch = async () => {
-    if (Platform.OS === 'ios' && !Platform.isPad && !Platform.isTV && !Platform.isMacCatalyst) {
+    if (Platform.OS === 'ios') {
       const options = {
         mediaType: 'photo',
         includeBase64: false,
@@ -77,10 +78,6 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
       handleImagePickerResponse({ assets: [placeholderImage] }, true);
     }
   };
-  
-  // const openImagePicker = () => {
-  //   launchImageLibrary({ mediaType: 'photo', maxHeight: 2000, maxWidth: 2000 }, handleImagePickerResponse);
-  // };
 
   const openImagePicker = () => {
     const options = {
@@ -93,11 +90,10 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
     launchImageLibrary(options, (response) => handleImagePickerResponse(response, false));
   };
 
-
   const handleImagePickerResponse = (response, fromCamera) => {
-    if (response?.didCancel) {
+    if (response.didCancel) {
       console.log('User cancelled image picker');
-    } else if (response?.error) {
+    } else if (response.error) {
       console.log('ImagePicker Error: ', response.error);
     } else {
       console.log('upload image response', response, fromCamera);
@@ -115,10 +111,11 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
       };
 
       setMessages((prevMessages) => [...prevMessages, newMessage]);
-      onSendMessage(newMessage);
+
       flatListRef.current.scrollToEnd({ animated: true });
     }
   };
+
 
   const handleLongPress = (item) => {
     Alert.alert(
@@ -137,20 +134,16 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
     setMessages((prevMessages) => prevMessages.filter((msg) => msg.id !== item.id));
   };
 
-  // const formatTimestamp = (timestamp) => {
-  //   const options = { hour: 'numeric', minute: '2-digit', hour12: true };
-  //   return new Intl.DateTimeFormat('en-US', options).format(timestamp);
-  // };
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return ''; // Handle empty timestamps
-    
+
     const date = new Date(timestamp);
     if (isNaN(date.getTime())) return ''; // Handle invalid date
-  
+
     const options = { hour: '2-digit', minute: '2-digit', hour12: true };
     return new Intl.DateTimeFormat('en-US', options).format(date);
   };
-  
+
 
 
   const renderMessage = ({ item }) => {
@@ -183,12 +176,12 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-      
 
-        <View style={[styles.header]}>
+
+        <View style={[styles.header, themesColor && { backgroundColor: themesColor }]}>
           <TouchableOpacity style={{ paddingRight: 10 }} onPress={() => navigation.goBack()}>
-            {/* <Icon name="arrow-back" size={24} color="#ffffff" /> */}
-            <Image source={require('../src/Assests/backArrow.jpg')} style={{width:30,height:30}} ccessible={true} alt="Back Arrow" />
+            <Icon name="arrow-back" size={24} color="#ffffff" />
+            {/* <Image source={require('../src/Assests/backArrow.jpg')} style={{width:30,height:30}} ccessible={true} alt="Back Arrow" /> */}
           </TouchableOpacity>
           <View style={styles.userInfo}>
             {profileData?.image ? (
@@ -212,13 +205,12 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
           onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: true })}
           onLayout={() => flatListRef.current.scrollToEnd({ animated: true })}
         />
-      
+
 
         <View style={styles.inputContainer}>
-          <TouchableOpacity style={styles.uploadIcon} onPress={pickImage}>
-            {/* <Icon name="photo-camera" size={24} color="#000000" /> */}
+          {/* <TouchableOpacity style={styles.uploadIcon} onPress={pickImage}>
             <Image source={require('../src/Assests/cameraIcon.jpeg')} style={{width:30,height:30}} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TextInput
             style={styles.input}
             placeholder="Type a message"
@@ -226,7 +218,7 @@ const ChatScreen = ({ initialMessages, onSendMessage, profileData,themes }) => {
             value={message}
             onChangeText={(text) => setMessage(text)}
           />
-          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+          <TouchableOpacity style={[styles.sendButton, themesColor && { backgroundColor: themesColor }]} onPress={sendMessage}>
             <Text style={styles.sendButtonText}>Send</Text>
           </TouchableOpacity>
         </View>

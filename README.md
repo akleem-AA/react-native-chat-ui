@@ -54,7 +54,7 @@ Before you begin, make sure you have the following installed:
 
 ```javascript
 import React, { useState } from 'react';
-import { ChatUI } from 'react-native-chat-ui';
+import ChatUI from 'akleem-react-native-chat';;
 
 const initialMessages = [
   { id: '1', text: 'Hello!', fromMe: false, timestamp: Date.now(), image: null },
@@ -68,7 +68,12 @@ const ChatScreen = () => {
     setMessages([...messages, message]);
   };
 
-  return <ChatUI messages={messages} onSendMessage={onSendMessage} profileData={{ name: 'John' }} themes={{ primary: '#6200ea' }} />;
+  return <ChatUI
+    messageData={messages} // render message
+    onSendMessage={onSendMessage} // help to send message
+    profileData={{ name: 'John' }}
+    themesColor={'blue'} //default is whatsapp themes
+  />;
 };
 
 export default ChatScreen;
@@ -78,10 +83,10 @@ export default ChatScreen;
 
 | Prop Name       | Type     | Description |
 |----------------|----------|-------------|
-| `initialMessages` | `Array` | List of initial chat messages |
+| `messageData` | `Array` | List of initial chat messages |
 | `onSendMessage`  | `Function` | Callback function when a message is sent |
 | `profileData` | `Object` | User profile data (e.g., `{ name: 'John' }`) |
-| `themes` | `Object` | Theme customization (e.g., `{ primary: '#6200ea' }`) |
+| `themesColor` | `color code` | Theme customization (e.g., `{'#6200ea'}`) |
 
 ## Passing Data
 
