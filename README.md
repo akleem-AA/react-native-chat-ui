@@ -53,8 +53,11 @@ Before you begin, make sure you have the following installed:
 ### Basic Example
 
 ```javascript
+
+//Note:- upload image and open camera button disable due to permission configuration
+import { StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
-import ChatUI from 'akleem-react-native-chat';;
+import ChatUI from 'akleem-react-native-chat';
 
 const initialMessages = [
   { id: '1', text: 'Hello!', fromMe: false, timestamp: Date.now(), image: null },
@@ -68,15 +71,27 @@ const ChatScreen = () => {
     setMessages([...messages, message]);
   };
 
-  return <ChatUI
-    messageData={messages} // render message
-    onSendMessage={onSendMessage} // help to send message
-    profileData={{ name: 'John' }}
-    themesColor={'blue'} //default is whatsapp themes
-  />;
+  return (
+    <View style={styles.container}>
+      <ChatUI
+        messageData={messages} // Render all messages
+        onSendMessage={onSendMessage} // Send new messages
+        profileData={{ name: 'John' }} // Profile data
+        themesColor={'blue'} // Default is WhatsApp theme
+      />
+    </View>
+  );
 };
 
 export default ChatScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+});
+
 ```
 
 ## Props
